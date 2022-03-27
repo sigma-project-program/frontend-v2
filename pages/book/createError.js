@@ -4,7 +4,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Formik, Form, useField } from 'formik';
 import * as Yup from 'yup';
-import { Input, Select, Textarea} from '@chakra-ui/react';
+import { 
+  Input, Select, Textarea, useToast,
+  Heading, Text, Container,
+  FormControl, FormLabel, FormErrorMessage, Button
+} from '@chakra-ui/react';
 import Layout from '../../components/Layout';
 import createError from '../../lib/createError';
  
@@ -14,13 +18,13 @@ import createError from '../../lib/createError';
    // message if the field is invalid and it has been touched (i.e. visited)
    const [field, meta] = useField(props);
    return (
-     <>
-       <label htmlFor={props.id || props.name}>{label}</label>
+     <FormControl mt={4}>
+       <FormLabel htmlFor={props.id || props.name}>{label}</FormLabel>
        <Input className="text-input" {...field} {...props} />
        {meta.touched && meta.error ? (
-         <div className="error">{meta.error}</div>
+         <FormErrorMessage className="error">{meta.error}</FormErrorMessage>
        ) : null}
-     </>
+     </FormControl>
    );
  };
 
@@ -31,13 +35,13 @@ import createError from '../../lib/createError';
   // message if the field is invalid and it has been touched (i.e. visited)
   const [field, meta] = useField(props);
   return (
-    <>
-      <label htmlFor={props.id || props.name}>{label}</label>
+    <FormControl mt={4}>
+      <FormLabel htmlFor={props.id || props.name}>{label}</FormLabel>
       <Textarea className="text-input" {...field} {...props} />
       {meta.touched && meta.error ? (
-        <div className="error">{meta.error}</div>
+        <FormErrorMessage className="error">{meta.error}</FormErrorMessage>
       ) : null}
-    </>
+    </FormControl>
   );
 };
 
@@ -67,12 +71,6 @@ const validationSchema= Yup.object(
   bookId: Yup.number().required(''),
 })
 
-const onSubmit = async (values, { setSubmitting }) => {
-  console.log("values follows:\n\n");
-  console.log(values);
-  console.log("\n\n");
-  await createError(values);
-}
   // setTimeout(() => {
     // alert(JSON.stringify(values, null, 2));
     
@@ -92,42 +90,68 @@ const initialValues ={
 }
 
 const CreateError = () => {
+  const toast = useToast()
+
+  const onSubmit = async (values, { setSubmitting }) => {
+    console.log("values follows:\n\n");
+    console.log(values);
+    console.log("\n\n");
+    let res = await createError(values);
+    console.log("res:")
+    console.log(res)
+  
+    let title
+    let status
+    
+    if(res.created) {
+      title =  `Yipee! Pushed Error to DB`
+      status = 'success'
+    } else {
+      title = `An error occurred when adding Error to Database`
+      status = 'error'
+    }
+    toast({ title, status, isClosable: true, duration: 3000 })
+  
+    
+    
+  }
+
   return (
-      <>
-        <h1>Subscribe!</h1>
+      <Container  pl={32}>
+       <Heading mt={5} as='h2' size='lg'>Create New Error</Heading>
         <Formik 
         initialValues={{...initialValues}} 
         validationSchema={validationSchema}
         onSubmit={onSubmit}>
           
-
-          <Form>
+          <Container mt={10}>
+          <Form >
            <MyTextInput
-             label="error name"
+             label="Error Name"
              name="errorName"
              type="text"
-             placeholder="forgot not equal to sign"
+             placeholder="Forgot not equal to sign"
            />
  
            <MyTextInput
-             label="errorType"
+             label="Error Type"
              name="errorType"
              type="text"
-             placeholder="typo"
+             placeholder="Typo"
            />
           
           <MyTextInput
-             label="location"
+             label="Location"
              name="location"
              type="text"
              placeholder="Page 32 Para 3 starting with 'abcdefg'"
            />
  
            <MyLongTextInput
-             label="description"
+             label="Description"
              name="description"
              type="text"
-             placeholder="The context implies x!=y since x > y but..."
+             placeholder="The context implies x!=y but since x > y ..."
            />
           
           <MyTextInput
@@ -146,74 +170,21 @@ const CreateError = () => {
              <option value="other">Other</option>
            </MySelect>
   */}
-           <button type="submit">Submit</button>
+           <Button mt={4} colorScheme=
+          'teal' type="submit">
+            Submit
+          </Button>
           </Form>
+          </Container>
         </Formik>
-      </>
+      </Container>
       )
+      
+      // isLoading={props.isSubmitting}
 }
 
-/*
-    function validateName(value) {
-      let error
-    //   if (!value) {
-    //     error = 'Name is required'
-    //   } else if (value.toLowerCase() !== 'naruto') {
-    //     error = "Jeez! You're not a fan 😱"
-    //   }
-      return error
-    }
-  
-    return (
-      <Formik
-        initialValues={{
-            errorName: '', 
-            errorType: '', 
-            location: '', 
-            description: '', 
-            bookId: '', 
-            decision: ''}
-        }
-        
-        onSubmit={(values, actions) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2))
-            actions.setSubmitting(false)
-          }, 1000)
-        }}
-      >
-
-        { (props) => (
-        <Layout>
-            <Form>
-            <Field name='name' validate={validateName}>
-              {({ field, form }) => (
-                <FormControl isInvalid={form.errors.name && form.touched.name}>
-                  <FormLabel htmlFor='name'>First name</FormLabel>
-                  <Input {...field} id='name' placeholder='name' />
-                  <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                </FormControl>
-              )}
-            </Field>
-           
-            <Button
-              mt={4}
-              colorScheme='teal'
-              isLoading={props.isSubmitting}
-              type='submit'
-            >
-              Submit
-            </Button>
-            </Form>
-        </Layout>
-          
-        )}
-      </Formik>
-    )
-  }
 
 
-*/
 
 export default function() {
   return(

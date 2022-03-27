@@ -6,6 +6,7 @@ import { Formik, Form, useField } from 'formik';
 import * as Yup from 'yup';
 import { Input, Select, Textarea} from '@chakra-ui/react';
 import Layout from '../../components/Layout';
+import createError from '../../lib/createError';
  
  const MyTextInput = ({ label, ...props }) => {
    // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
@@ -66,12 +67,20 @@ const validationSchema= Yup.object(
   bookId: Yup.number().required(''),
 })
 
-const onSubmit= (values, { setSubmitting }) => {
-  setTimeout(() => {
-    alert(JSON.stringify(values, null, 2));
-    setSubmitting(false);
-  }, 400);
+const onSubmit = async (values, { setSubmitting }) => {
+  console.log("values follows:\n\n");
+  console.log(values);
+  console.log("\n\n");
+  await createError(values);
 }
+  // setTimeout(() => {
+    // alert(JSON.stringify(values, null, 2));
+    
+
+//     await 
+//     setSubmitting(false);
+//   }, 400);
+// }
 
 const initialValues ={
   errorName: '', 

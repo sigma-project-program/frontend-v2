@@ -7,18 +7,18 @@ import Layout from '../../components/Layout'
 import { useState } from 'react'
 import createBook from '../../lib/createBook'
 
-const onSubmitHandler = async (e, bookName) =>{
-    e.preventDefault();
-    console.log("book Name is:", bookName)
-    let res = await createBook(bookName);
-    if(res.created) {
+// const onSubmitHandler = async (e, bookName) =>{
+//     e.preventDefault();
+//     console.log("book Name is:", bookName)
+//     let res = await createBook(bookName);
+//     if(res.created) {
         
         
-    } else {
+//     } else {
         
-    }
+//     }
 
-} 
+// } 
 
 const BookCreate = (props) => {
     const onChangeWrapper = (e, func) => {

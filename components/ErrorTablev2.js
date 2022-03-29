@@ -13,6 +13,10 @@ function ErrorTable({errorData}) {
         accessor: 'id',
         },
         {
+            Header: 'Book ID',
+            accessor: 'bookId'
+        },
+        {
         Header: 'Name',
         accessor: 'errorName',
         },

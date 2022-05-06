@@ -44,10 +44,10 @@ function ErrorTable({errorData}) {
     <Table {...getTableProps() } mt={5} px={5}>
         <Thead>
         {headerGroups.map((headerGroup) => (
-            <Tr {...headerGroup.getHeaderGroupProps()}>
+            <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
             {headerGroup.headers.map((column) => (
                 <Th
-                {...column.getHeaderProps(column.getSortByToggleProps())}
+                {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}
                 >
                 {column.render('Header')}
                 <chakra.span pl='4'>
@@ -68,9 +68,9 @@ function ErrorTable({errorData}) {
         {rows.map((row) => {
             prepareRow(row)
             return (
-            <Tr {...row.getRowProps()}>
+            <Tr {...row.getRowProps()} key={row.id}>
                 {row.cells.map((cell) => (
-                <Td {...cell.getCellProps()} isNumeric={cell.column.isNumeric}>
+                <Td {...cell.getCellProps()} key={cell.id} isNumeric={cell.column.isNumeric}>
                     {cell.render('Cell')}
                 </Td>
                 ))}
